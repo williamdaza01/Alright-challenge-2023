@@ -1,5 +1,6 @@
 import { Component } from '@angular/core';
 import { LogsignServiceService } from 'src/app/services/logsign-service.service';
+import { errorForm } from 'src/utils/errorForm';
 
 @Component({
   selector: 'app-signup',
@@ -32,22 +33,7 @@ export class SignupComponent {
       };
       this.service.postSignUp(signup_data);
     } else {
-      const forms = document.querySelectorAll('.needs-validation');
-
-      Array.prototype.slice.call(forms).forEach(function (form) {
-        form.addEventListener(
-          'submit',
-          function (event: { preventDefault: () => void; stopPropagation: () => void; }) {
-            if (!form.checkValidity()) {
-              event.preventDefault();
-              event.stopPropagation();
-            }
-
-            form.classList.add('was-validated');
-          },
-          false
-        );
-      });
+      errorForm();
     }
   }
 }
