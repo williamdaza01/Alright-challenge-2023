@@ -1,4 +1,5 @@
 import { Component } from '@angular/core';
+import { Router } from '@angular/router';
 import { LogsignServiceService } from 'src/app/services/logsign-service.service';
 import { errorForm } from 'src/utils/errorForm';
 
@@ -14,7 +15,7 @@ export class SignupComponent {
   password: string = '';
   conf_password: string = '';
 
-  constructor(private service: LogsignServiceService) {}
+  constructor(private service: LogsignServiceService, private router: Router) {}
 
   signupUser() {
     if (
@@ -32,6 +33,7 @@ export class SignupComponent {
         password: this.password,
       };
       this.service.postSignUp(signup_data);
+      this.router.navigate(['/dashboard']);
     } else {
       errorForm();
     }
