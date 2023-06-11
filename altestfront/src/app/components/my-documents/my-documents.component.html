@@ -1,0 +1,149 @@
+<h1>Tus Documentos</h1>
+<table class="table">
+  <thead>
+    <tr>
+      <th scope="col"><span class="d-flex justify-content-center">Id</span></th>
+      <th scope="col">
+        <span class="d-flex justify-content-center">Documento</span>
+      </th>
+      <th scope="col">
+        <span class="d-flex justify-content-center">Titulo</span>
+      </th>
+      <th scope="col">
+        <span class="d-flex justify-content-center">Estado</span>
+      </th>
+      <th scope="col">
+        <span class="d-flex justify-content-center">Opciones</span>
+      </th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr *ngFor="let document of docs">
+      <td>
+        <span class="d-flex justify-content-center">{{ document._id }}</span>
+      </td>
+      <td>
+        <a
+          class="d-flex justify-content-center"
+          (click)="openPDF(document.open.blob, content)"
+        >
+          <i class="bi bi-file-earmark-pdf"></i
+        ></a>
+      </td>
+      <td>
+        <span class="d-flex justify-content-center">{{ document.title }}</span>
+      </td>
+      <td>
+        <span class="d-flex justify-content-center">{{ document.state }}</span>
+      </td>
+      <td class="d-flex justify-content-around">
+        <a (click)="deleteDocument(document._id, deletedoc)"><i class="bi bi-trash-fill"></i></a
+        ><i class="bi bi-check-square"></i>
+      </td>
+    </tr>
+  </tbody>
+</table>
+
+<ng-template #deletedoc let-modal>
+  <div class="modal-header">
+    <h4 class="modal-title" id="modal-title">Document deletion</h4>
+    <button
+      type="button"
+      class="btn-close"
+      aria-describedby="modal-title"
+      (click)="modal.dismiss('Cross click')"
+    ></button>
+  </div>
+  <div class="modal-body">
+    <p>
+      <strong
+        >¿Seguro quieres borrar este documenro?</strong
+      >
+    </p>
+  </div>
+  <div class="modal-footer">
+    <button
+      type="button"
+      class="btn btn-outline-secondary"
+      (click)="modal.dismiss('cancel click')"
+    >
+      Cancel
+    </button>
+    <button
+      type="button"
+      class="btn btn-danger"
+      (click)="modal.close('Ok click')"
+      (click)="deleteDocument()"
+    >
+      Ok
+    </button>
+  </div>
+</ng-template>
+
+<ng-template #content let-modal>
+  <div class="modal-header">
+    <button
+      type="button"
+      class="btn-close"
+      aria-label="Close"
+      (click)="modal.dismiss('Cross click')"
+    ></button>
+  </div>
+  <div class="modal-body">
+    <ngx-extended-pdf-viewer
+      *ngIf="pdfUrl"
+      [src]="pdfUrl"
+      [height]="'95%'"
+      [useBrowserLocale]="true"
+      [textLayer]="true"
+      [showHandToolButton]="true"
+    >
+    </ngx-extended-pdf-viewer>
+  </div>
+  <div class="modal-footer">
+    <button
+      type="button"
+      class="btn btn-light"
+      (click)="modal.close('Close click')"
+    >
+      Close
+    </button>
+  </div>
+</ng-template>
+
+<form (ngSubmit)="uploadPDF()" #pdfForm="ngForm" class="mb-3 pt-4">
+  <h2>Sube tu documento acá</h2>
+  <div class="mb-3">
+    <label for="title" class="form-label">Título:</label>
+    <input
+      type="text"
+      id="title"
+      name="title"
+      [(ngModel)]="pdfTitle"
+      required
+      class="form-control"
+    />
+  </div>
+  <div class="mb-3">
+    <label for="pdfFile" class="form-label">Archivo PDF:</label>
+    <input
+      class="form-control form-control-sm"
+      type="file"
+      id="pdfFile"
+      name="document"
+      (change)="onFileChange($event)"
+      accept=".pdf"
+      required
+    />
+  </div>
+  <button
+    type="submit"
+    [disabled]="pdfForm.invalid || fileSizeError"
+    class="btn btn-primary"
+  >
+    Subir PDF
+  </button>
+  <p *ngIf="fileSizeError" class="text-danger">
+    El tamaño del archivo PDF excede el límite permitido de 5MB.
+  </p>
+</form>
