@@ -15,6 +15,8 @@ export class MyDocumentsComponent {
   docs: any[] = [];
   pdfUrl: Uint8Array | null = null;
   showModal: boolean = false;
+  deleteConfirmation: boolean = false;
+  private tempId: string = '';
 
   constructor(private service: DocumentsServiceService, private modalService: NgbModal) {}
 
@@ -34,7 +36,31 @@ export class MyDocumentsComponent {
       }
     }
   }
-
+  
+  readFileAsArrayBuffer(file: File): Promise<Blob> {
+    return new Promise<Blob>((resolve, reject) => {
+      const reader = new FileReader();
+      reader.onload = () => {
+        const arrayBuffer = new Uint8Array(reader.result as ArrayBuffer);
+        const blob = new Blob([arrayBuffer], { type: file.type });
+        resolve(blob);
+      };
+      reader.onerror = () => {
+        reject(new Error('Error al leer el archivo'));
+      };
+      reader.readAsArrayBuffer(file);
+    });
+  }
+  
+  openPDF(pdfBlob: Uint8Array, content?:any) {
+    this.pdfUrl = pdfBlob;
+    this.openModal(content, "", true);
+  }
+  
+  openModal(content:any, size?: string, fullscreen?: boolean){
+    this.modalService.open(content, {size, fullscreen})
+  }
+  
   async uploadPDF() {
     if (!this.pdfFile) {
       return;
@@ -49,23 +75,9 @@ export class MyDocumentsComponent {
     };
 
     this.service.uploadDocument(documentData);
+    location.reload()
     this.pdfTitle = '';
     this.pdfFile = null;
-  }
-
-  readFileAsArrayBuffer(file: File): Promise<Blob> {
-    return new Promise<Blob>((resolve, reject) => {
-      const reader = new FileReader();
-      reader.onload = () => {
-        const arrayBuffer = new Uint8Array(reader.result as ArrayBuffer);
-        const blob = new Blob([arrayBuffer], { type: file.type });
-        resolve(blob);
-      };
-      reader.onerror = () => {
-        reject(new Error('Error al leer el archivo'));
-      };
-      reader.readAsArrayBuffer(file);
-    });
   }
 
   async loadDocuments() {
@@ -84,9 +96,18 @@ export class MyDocumentsComponent {
       }
     }
   }
-
-  openPDF(pdfBlob: Uint8Array, content?:any) {
-    this.pdfUrl = pdfBlob;
-    this.modalService.open(content, { fullscreen: true });
+  
+  async deleteDocument(id?: string, deletedoc?: any){
+    if(!this.deleteConfirmation){
+      this.openModal(deletedoc, "lg");
+      if(id){
+        this.tempId = id;
+      }
+      this.deleteConfirmation = true;
+    } else{
+      const docDeletd = await this.service.deleteDocument(this.tempId);
+      location.reload()
+    }
   }
+
 }

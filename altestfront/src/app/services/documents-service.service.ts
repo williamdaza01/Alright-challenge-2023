@@ -5,11 +5,12 @@ import { Injectable } from '@angular/core';
   providedIn: 'root',
 })
 export class DocumentsServiceService {
+
+  private url: string = 'http://localhost:3000/documents';
+
   constructor(private http: HttpClient) {}
 
   async uploadDocument(documentData: any) {
-    const url = 'http://localhost:3000/documents/upload-document';
-
     const formData = new FormData();
     formData.append('title', documentData.title);
     formData.append('state', documentData.state);
@@ -18,18 +19,31 @@ export class DocumentsServiceService {
     formData.append('file', blob);
 
     try {
-      const response = await this.http.post(url, formData).toPromise();
+      const response = await this.http.post(`${this.url}/upload-document`, formData).toPromise();
       console.log('Documento enviado al backend con éxito', response);
     } catch (error) {
       console.error('Error al enviar el documento al backend:', error);
     }
   }
 
-  getDocuments(): Promise<any> {
-    const url = 'http://localhost:3000/documents/load-documents';
-  
+  getDocuments(): Promise<any> {  
     return new Promise((resolve, reject) => {
-      this.http.get(url).subscribe(
+      this.http.get(`${this.url}/load-documents`).subscribe(
+        (response) => {
+          resolve(response);
+        },
+        (error) => {
+          reject(error);
+        }
+      );
+    });
+  }
+
+  deleteDocument(id: string) {  
+    console.log(id);
+    
+    return new Promise((resolve, reject) => {
+      this.http.delete(`${this.url}/delete-document/?documentId=${id}`).subscribe(
         (response) => {
           resolve(response);
         },

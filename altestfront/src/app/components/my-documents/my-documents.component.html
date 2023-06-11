@@ -1,27 +1,84 @@
+<h1>Tus Documentos</h1>
 <table class="table">
   <thead>
     <tr>
       <th scope="col"><span class="d-flex justify-content-center">Id</span></th>
-      <th scope="col"><span class="d-flex justify-content-center">Documento</span></th>
-      <th scope="col"><span class="d-flex justify-content-center">Titulo</span></th>
-      <th scope="col"><span class="d-flex justify-content-center">Estado</span></th>
-      <th scope="col"><span class="d-flex justify-content-center">Opciones</span></th>
+      <th scope="col">
+        <span class="d-flex justify-content-center">Documento</span>
+      </th>
+      <th scope="col">
+        <span class="d-flex justify-content-center">Titulo</span>
+      </th>
+      <th scope="col">
+        <span class="d-flex justify-content-center">Estado</span>
+      </th>
+      <th scope="col">
+        <span class="d-flex justify-content-center">Opciones</span>
+      </th>
     </tr>
   </thead>
   <tbody>
     <tr *ngFor="let document of docs">
-      <td><span class="d-flex justify-content-center">{{ document._id }}</span></td>
       <td>
-        <a class="d-flex justify-content-center" (click)="openPDF(document.open.blob, content)">
+        <span class="d-flex justify-content-center">{{ document._id }}</span>
+      </td>
+      <td>
+        <a
+          class="d-flex justify-content-center"
+          (click)="openPDF(document.open.blob, content)"
+        >
           <i class="bi bi-file-earmark-pdf"></i
         ></a>
       </td>
-      <td><span class="d-flex justify-content-center">{{ document.title }}</span></td>
-      <td><span class="d-flex justify-content-center">{{ document.state }}</span></td>
-      <td class="d-flex justify-content-around"><i class="bi bi-check-square "></i><i class="bi bi-trash-fill"></i></td>
+      <td>
+        <span class="d-flex justify-content-center">{{ document.title }}</span>
+      </td>
+      <td>
+        <span class="d-flex justify-content-center">{{ document.state }}</span>
+      </td>
+      <td class="d-flex justify-content-around">
+        <a (click)="deleteDocument(document._id, deletedoc)"><i class="bi bi-trash-fill"></i></a
+        ><i class="bi bi-check-square"></i>
+      </td>
     </tr>
   </tbody>
 </table>
+
+<ng-template #deletedoc let-modal>
+  <div class="modal-header">
+    <h4 class="modal-title" id="modal-title">Document deletion</h4>
+    <button
+      type="button"
+      class="btn-close"
+      aria-describedby="modal-title"
+      (click)="modal.dismiss('Cross click')"
+    ></button>
+  </div>
+  <div class="modal-body">
+    <p>
+      <strong
+        >¿Seguro quieres borrar este documenro?</strong
+      >
+    </p>
+  </div>
+  <div class="modal-footer">
+    <button
+      type="button"
+      class="btn btn-outline-secondary"
+      (click)="modal.dismiss('cancel click')"
+    >
+      Cancel
+    </button>
+    <button
+      type="button"
+      class="btn btn-danger"
+      (click)="modal.close('Ok click')"
+      (click)="deleteDocument()"
+    >
+      Ok
+    </button>
+  </div>
+</ng-template>
 
 <ng-template #content let-modal>
   <div class="modal-header">
@@ -54,7 +111,7 @@
   </div>
 </ng-template>
 
-<form (ngSubmit)="uploadPDF()" #pdfForm="ngForm" class="mb-3">
+<form (ngSubmit)="uploadPDF()" #pdfForm="ngForm" class="mb-3 pt-4">
   <h2>Sube tu documento acá</h2>
   <div class="mb-3">
     <label for="title" class="form-label">Título:</label>
