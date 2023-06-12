@@ -39,11 +39,34 @@ export class DocumentsServiceService {
     });
   }
 
-  deleteDocument(id: string) {  
-    console.log(id);
-    
+  deleteDocument(id: string) {      
     return new Promise((resolve, reject) => {
       this.http.delete(`${this.url}/delete-document/?documentId=${id}`).subscribe(
+        (response) => {
+          resolve(response);
+        },
+        (error) => {
+          reject(error);
+        }
+      );
+    });
+  }
+
+  updateDocument(id: string, body: any){
+    return new Promise((resolve, reject) => {
+      this.http.put(`${this.url}/update-document-reviewer/?documentId=${id}`, body).subscribe(
+      (response) => {
+        resolve(response);
+      },
+      (error) => {
+        reject(error);
+      });
+    })
+  }
+
+  getComments(){
+    return new Promise((resolve, reject) => {
+      this.http.get(`${this.url}/load-comments`).subscribe(
         (response) => {
           resolve(response);
         },
