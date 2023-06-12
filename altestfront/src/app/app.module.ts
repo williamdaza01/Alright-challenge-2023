@@ -12,6 +12,7 @@ import { DashboardComponent } from './components/dashboard/dashboard.component';
 import { NgxWebstorageModule } from 'ngx-webstorage';
 import { MyDocumentsComponent } from './components/my-documents/my-documents.component';
 import { NgbModule } from '@ng-bootstrap/ng-bootstrap';
+import { MyReviewesComponent } from './components/my-reviewes/my-reviewes.component';
 
 @NgModule({
   declarations: [
@@ -19,7 +20,8 @@ import { NgbModule } from '@ng-bootstrap/ng-bootstrap';
     SignupComponent,
     LoginComponent,
     DashboardComponent,
-    MyDocumentsComponent
+    MyDocumentsComponent,
+    MyReviewesComponent
   ],
   imports: [
     BrowserModule,

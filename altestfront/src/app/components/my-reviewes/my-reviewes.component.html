@@ -1,0 +1,23 @@
+<h1>Mis Revisiones</h1>
+<table class="table">
+  <thead>
+    <tr>
+      <th scope="col">
+        <span class="d-flex justify-content-center">Id Revision</span>
+      </th>
+      <th scope="col">
+        <span class="d-flex justify-content-center">Titulo del documento</span>
+      </th>
+      <th scope="col">
+        <span class="d-flex justify-content-center">Estado</span>
+      </th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr *ngFor="let rev of reviews">
+      <td><span class="d-flex justify-content-center">{{ rev._id }}</span></td>
+      <td><span class="d-flex justify-content-center">{{ rev.fileTitle }}</span></td>
+      <td><span class="d-flex justify-content-center">{{ rev.state }}</span></td>
+    </tr>
+  </tbody>
+</table>
