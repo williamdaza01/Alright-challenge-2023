@@ -26,6 +26,7 @@
         <a
           class="d-flex justify-content-center"
           (click)="openPDF(document.open.blob, content)"
+          (click)="documentIdForReview = document._id"
         >
           <i class="bi bi-file-earmark-pdf"></i
         ></a>
@@ -41,8 +42,9 @@
           ><i class="bi bi-trash-fill"></i
         ></a>
         <a (click)="loadComments(comment)"><i class="bi bi-card-list"></i></a>
-        <a (click)="loadReviewers(revdoc)"
-            (click)="documentIdForReview = document._id"
+        <a
+          (click)="loadReviewers(revdoc)"
+          (click)="documentIdForReview = document._id"
           ><i class="bi bi-check-square"></i
         ></a>
       </td>
@@ -64,7 +66,9 @@
     <table class="table">
       <thead>
         <tr>
-          <th scope="col"><span class="d-flex justify-content-center">Nombre</span></th>
+          <th scope="col">
+            <span class="d-flex justify-content-center">Nombre</span>
+          </th>
           <th scope="col">
             <span class="d-flex justify-content-center">Comentario</span>
           </th>
@@ -74,18 +78,29 @@
         </tr>
       </thead>
       <tbody>
-        <tr *ngFor="let rev of reviewers">
+        <tr *ngFor="let com of comments">
           <td>
-            <span class="d-flex justify-content-center">Name lastname</span>
+            <span class="d-flex justify-content-center">{{
+              com.nameOwner
+            }}</span>
           </td>
           <td>
-            <span class="d-flex justify-content-center">Comentario</span>
+            <span class="d-flex justify-content-center">{{
+              com.description
+            }}</span>
           </td>
           <td>
             <span class="d-flex justify-content-center">
               <div class="form-check">
-                <button>Aceptar</button>
-                <button>Rechazar</button>
+                <a (click)="changeStateComment(com._id, acceptedState)"
+                  ><i class="bi bi-check"></i
+                ></a>
+                <a (click)="changeStateComment(com._id, rejectedState)"
+                  ><i class="bi bi-x"></i
+                ></a>
+                <a (click)="deleteComment(com._id, com.idOwner)"
+                  ><i class="bi bi-trash-fill"></i
+                ></a>
               </div>
             </span>
           </td>
@@ -118,9 +133,13 @@
     <table class="table">
       <thead>
         <tr>
-          <th scope="col"><span class="d-flex justify-content-center">Id del Revisor</span></th>
           <th scope="col">
-            <span class="d-flex justify-content-center">Nombre del Revisor</span>
+            <span class="d-flex justify-content-center">Id del Revisor</span>
+          </th>
+          <th scope="col">
+            <span class="d-flex justify-content-center"
+              >Nombre del Revisor</span
+            >
           </th>
           <th scope="col">
             <span class="d-flex justify-content-center">Selecionar</span>
@@ -133,7 +152,9 @@
             <span class="d-flex justify-content-center">{{ rev._id }}</span>
           </td>
           <td>
-            <span class="d-flex justify-content-center">{{ rev.name }} {{ rev.lastname }}</span>
+            <span class="d-flex justify-content-center"
+              >{{ rev.name }} {{ rev.lastname }}</span
+            >
           </td>
           <td>
             <span class="d-flex justify-content-center">
@@ -144,7 +165,7 @@
                   [value]="rev._id"
                   id="defaultCheck1"
                   [(ngModel)]="selectedReviewerId"
-                >
+                />
               </div>
             </span>
           </td>
@@ -161,13 +182,13 @@
       Close
     </button>
     <button
-    type="submit"
-    class="btn btn-success"
-    (click)="modal.close('Close click')"
-    (click)="requestReview()"
-  >
-    Solicitar Revision
-  </button>
+      type="submit"
+      class="btn btn-success"
+      (click)="modal.close('Close click')"
+      (click)="requestReview()"
+    >
+      Solicitar Revision
+    </button>
   </div>
 </ng-template>
 
@@ -226,6 +247,48 @@
     </ngx-extended-pdf-viewer>
   </div>
   <div class="modal-footer">
+    <button
+      type="button"
+      class="btn btn-success"
+      (click)="openModal(comm, 'xl')"
+    >
+      Crear Comentario
+    </button>
+    <button
+      type="button"
+      class="btn btn-light"
+      (click)="modal.close('Close click')"
+    >
+      Close
+    </button>
+  </div>
+</ng-template>
+
+<ng-template #comm let-modal>
+  <div class="modal-header">
+    <h4 class="modal-title">Comentario</h4>
+    <button
+      type="button"
+      class="btn-close"
+      aria-label="Close"
+      (click)="modal.dismiss('Cross click')"
+    ></button>
+  </div>
+  <div class="modal-body">
+    <div class="form-group">
+      <label for="exampleFormControlTextarea1">Comentario</label>
+      <textarea
+        class="form-control"
+        id="exampleFormControlTextarea1"
+        rows="3"
+        [(ngModel)]="commentValue"
+      ></textarea>
+    </div>
+  </div>
+  <div class="modal-footer">
+    <button type="button" class="btn btn-success" (click)="createComment()">
+      Crear Comentario
+    </button>
     <button
       type="button"
       class="btn btn-light"

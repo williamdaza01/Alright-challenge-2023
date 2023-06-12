@@ -21,7 +21,8 @@ import { MyReviewesComponent } from './components/my-reviewes/my-reviewes.compon
     LoginComponent,
     DashboardComponent,
     MyDocumentsComponent,
-    MyReviewesComponent
+    MyReviewesComponent,
+    
   ],
   imports: [
     BrowserModule,

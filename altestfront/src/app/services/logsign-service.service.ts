@@ -1,12 +1,13 @@
 import { Injectable } from '@angular/core';
 import { HttpClient, HttpHeaders } from '@angular/common/http';
+import { SessionStorageService } from 'ngx-webstorage';
 import { Observable } from 'rxjs';
 
 @Injectable({
   providedIn: 'root',
 })
 export class LogsignServiceService {
-  constructor(private http: HttpClient) {}
+  constructor(private http: HttpClient, private sessionStorage: SessionStorageService) {}
 
   postSignUp(data: object) {
     const url = 'http://localhost:3000/user/create-user';
@@ -32,7 +33,8 @@ export class LogsignServiceService {
       this.http.post(url, JSON.stringify(data), { headers }).subscribe(
         (response: any) => {
           console.log('Solicitud POST exitosa:', response);
-          observer.next(response.userExist);
+          this.sessionStorage.store('currentUser', response.currentUser);
+          observer.next(response.currentUser.userExist);
           observer.complete();
         },
         (error) => {

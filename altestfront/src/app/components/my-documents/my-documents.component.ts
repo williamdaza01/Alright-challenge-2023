@@ -1,5 +1,6 @@
 import { Component } from '@angular/core';
 import { NgbModal } from '@ng-bootstrap/ng-bootstrap';
+import { SessionStorageService } from 'ngx-webstorage';
 import { DocumentsServiceService } from 'src/app/services/documents-service.service';
 import { ReviewsServiceService } from 'src/app/services/reviews-service.service';
 import { StateType } from 'src/utils/types';
@@ -10,23 +11,27 @@ import { StateType } from 'src/utils/types';
   styleUrls: ['./my-documents.component.scss'],
 })
 export class MyDocumentsComponent {
-  pdfTitle: string = '';
   pdfFile: File | null = null;
-  fileSizeError: boolean = false;
+  pdfUrl: Uint8Array | null = null;
   docs: any[] = [];
   reviewers: any[] = [];
   comments: any[] = [];
-  pdfUrl: Uint8Array | null = null;
+  fileSizeError: boolean = false;
   showModal: boolean = false;
   deleteConfirmation: boolean = false;
+  pdfTitle: string = '';
   selectedReviewerId: string = '';
   documentIdForReview: string = '';
+  commentValue: string = '';
+  acceptedState: StateType = StateType.ACCEPTED;
+  rejectedState: StateType = StateType.REJECTED;
   private tempId: string = '';
 
   constructor(
     private service: DocumentsServiceService,
     private revService: ReviewsServiceService,
-    private modalService: NgbModal
+    private modalService: NgbModal,
+    private sessionStorage: SessionStorageService
   ) {}
 
   ngOnInit() {
@@ -70,9 +75,7 @@ export class MyDocumentsComponent {
     this.modalService.open(content, { size, fullscreen });
   }
 
-  async requestReview() {
-    console.log(this.selectedReviewerId, this.documentIdForReview);
-    
+  async requestReview() {    
     if (this.selectedReviewerId && this.documentIdForReview) {
       const selectedReviewer = this.reviewers.find(rev => rev._id === this.selectedReviewerId);
   
@@ -81,6 +84,7 @@ export class MyDocumentsComponent {
   
         if (documentForReview) {
           const updateData = {
+            title: documentForReview.title,
             reviewer: selectedReviewer,
             state: StateType.IN_REVIEW
           };
@@ -156,8 +160,39 @@ export class MyDocumentsComponent {
 
   async loadComments(comment: any){
     this.openModal(comment, 'xl');
-    const response = await this.service.getComments();
+    const response = await this.service.getComments();    
 
-    return (this.comments = response)
+    return (this.comments = response.data)
+  }
+
+  async createComment(){
+    const selectedDocument = this.docs.find(doc => doc._id === this.documentIdForReview);
+    const currentUser = this.sessionStorage.retrieve('currentUser');
+    
+    if (selectedDocument && currentUser) {
+      const commentData = {
+        idFile: selectedDocument._id,
+        idOwner: currentUser.userId,
+        nameOwner: currentUser.userName,
+        description: this.commentValue
+      };
+      this.service.createComment(commentData);
+    } else {
+      console.log('Error: No se encontró el documento o el usuario actual.');
+    }
+  }
+
+  async changeStateComment(id: string, state: StateType | string){
+    const comment = this.comments.find(com => com._id === id);
+    comment.state = state;
+    await this.service.updateComment(id, comment);
+  }
+
+  async deleteComment(id: string, idOwner: string){
+    const currentUser = this.sessionStorage.retrieve('currentUser');
+    if(idOwner === currentUser.UserId){
+      await this.service.deleteComment(id);
+      await this.loadComments(this.comments);
+    }
   }
 }
