@@ -12,7 +12,7 @@
 - Nest version 9
 - Node version 20
 
-1. cd altestback
+1. cd altestbackend
 2. npm i
 3. npm run dev 
 
