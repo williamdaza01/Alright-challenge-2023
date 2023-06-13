@@ -1,56 +1,64 @@
 <h1>Tus Documentos</h1>
-<table class="table">
-  <thead>
-    <tr>
-      <th scope="col"><span class="d-flex justify-content-center">Id</span></th>
-      <th scope="col">
-        <span class="d-flex justify-content-center">Documento</span>
-      </th>
-      <th scope="col">
-        <span class="d-flex justify-content-center">Titulo</span>
-      </th>
-      <th scope="col">
-        <span class="d-flex justify-content-center">Estado</span>
-      </th>
-      <th scope="col">
-        <span class="d-flex justify-content-center">Opciones</span>
-      </th>
-    </tr>
-  </thead>
-  <tbody>
-    <tr *ngFor="let document of docs">
-      <td>
-        <span class="d-flex justify-content-center">{{ document._id }}</span>
-      </td>
-      <td>
-        <a
-          class="d-flex justify-content-center"
-          (click)="openPDF(document.open.blob, content)"
-          (click)="documentIdForReview = document._id"
-        >
-          <i class="bi bi-file-earmark-pdf"></i
-        ></a>
-      </td>
-      <td>
-        <span class="d-flex justify-content-center">{{ document.title }}</span>
-      </td>
-      <td>
-        <span class="d-flex justify-content-center">{{ document.state }}</span>
-      </td>
-      <td class="d-flex justify-content-around">
-        <a (click)="deleteDocument(document._id, deletedoc)"
-          ><i class="bi bi-trash-fill"></i
-        ></a>
-        <a (click)="loadComments(comment)"><i class="bi bi-card-list"></i></a>
-        <a
-          (click)="loadReviewers(revdoc)"
-          (click)="documentIdForReview = document._id"
-          ><i class="bi bi-check-square"></i
-        ></a>
-      </td>
-    </tr>
-  </tbody>
-</table>
+<div class="table-responsive">
+  <table class="table">
+    <thead>
+      <tr>
+        <th scope="col">
+          <span class="d-flex justify-content-center">Id</span>
+        </th>
+        <th scope="col">
+          <span class="d-flex justify-content-center">Documento</span>
+        </th>
+        <th scope="col">
+          <span class="d-flex justify-content-center">Titulo</span>
+        </th>
+        <th scope="col">
+          <span class="d-flex justify-content-center">Estado</span>
+        </th>
+        <th scope="col">
+          <span class="d-flex justify-content-center">Opciones</span>
+        </th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr *ngFor="let document of docs">
+        <td>
+          <span class="d-flex justify-content-center">{{ document._id }}</span>
+        </td>
+        <td>
+          <a
+            class="d-flex justify-content-center"
+            (click)="openPDF(document.open.blob, content)"
+            (click)="documentIdForReview = document._id"
+          >
+            <i class="bi bi-file-earmark-pdf"></i
+          ></a>
+        </td>
+        <td>
+          <span class="d-flex justify-content-center">{{
+            document.title
+          }}</span>
+        </td>
+        <td>
+          <span class="d-flex justify-content-center">{{
+            document.state
+          }}</span>
+        </td>
+        <td class="d-flex justify-content-around">
+          <a (click)="deleteDocument(document._id, deletedoc)"
+            ><i class="bi bi-trash-fill"></i
+          ></a>
+          <a (click)="loadComments(comment)"><i class="bi bi-card-list"></i></a>
+          <a
+            (click)="loadReviewers(revdoc)"
+            (click)="documentIdForReview = document._id"
+            ><i class="bi bi-check-square"></i
+          ></a>
+        </td>
+      </tr>
+    </tbody>
+  </table>
+</div>
 
 <ng-template #comment let-modal>
   <div class="modal-header">

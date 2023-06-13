@@ -2,6 +2,7 @@ import { Injectable } from '@angular/core';
 import { HttpClient, HttpHeaders } from '@angular/common/http';
 import { SessionStorageService } from 'ngx-webstorage';
 import { Observable } from 'rxjs';
+import * as CryptoJS from 'crypto-js';
 
 @Injectable({
   providedIn: 'root',
@@ -11,11 +12,9 @@ export class LogsignServiceService {
 
   postSignUp(data: object) {
     const url = 'http://localhost:3000/user/create-user';
-    const headers = new HttpHeaders({
-      'Content-Type': 'application/json',
-    });
 
-    this.http.post(url, JSON.stringify(data), { headers }).subscribe(
+    const encryptedData = CryptoJS.AES.encrypt(JSON.stringify(data), 'coconice').toString();    
+    this.http.post(url, {encryptedData}).subscribe(
       (response) => {
         console.log('Solicitud POST exitosa:', response);
       },
@@ -27,10 +26,10 @@ export class LogsignServiceService {
 
   postLogin(data: object): Observable<boolean> {
     const url = 'http://localhost:3000/user/login-user';
-    const headers = { 'Content-Type': 'application/json' };
+    const encryptedData = CryptoJS.AES.encrypt(JSON.stringify(data), 'coconice').toString();  
   
     return new Observable<boolean>(observer => {
-      this.http.post(url, JSON.stringify(data), { headers }).subscribe(
+      this.http.post(url, {encryptedData}).subscribe(
         (response: any) => {
           console.log('Solicitud POST exitosa:', response);
           this.sessionStorage.store('currentUser', response.currentUser);
