@@ -15,3 +15,6 @@
 1. cd altestback
 2. npm i
 3. npm run dev 
+
+## DB
+- MongoDB Compass - localhost:3000
