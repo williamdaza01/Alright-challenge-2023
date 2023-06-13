@@ -22,7 +22,6 @@ import { MyReviewesComponent } from './components/my-reviewes/my-reviewes.compon
     DashboardComponent,
     MyDocumentsComponent,
     MyReviewesComponent,
-    
   ],
   imports: [
     BrowserModule,

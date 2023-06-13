@@ -18,27 +18,24 @@
   </div>
 </header>
 
-<div
-  id="sidebarMenu"
-  class="col-md-3 col-lg-2 d-md-block bg-light collapse multi-collapse"
->
+<div id="sidebarMenu" class="col-md-3 col-lg-2 d-md-block bg-light collapse multi-collapse">
   <div class="position-sticky pt-3">
     <ul class="nav flex-column">
       <li class="nav-item">
-        <a class="nav-link active" aria-current="page">
-          <span data-feather="home"></span>
+        <a class="nav-link" routerLink="/" routerLinkActive="active"><h3>
           Dashboard
+        </h3>
         </a>
       </li>
       <li class="nav-item">
-        <a class="nav-link" routerLink="/dashboard/mydocuments">
-          <span data-feather="file"></span>
+        <a class="nav-link" routerLink="/dashboard/mydocuments" routerLinkActive="active">
+          <i class="bi bi-file-earmark-pdf"></i>
           Mis Documentos
         </a>
       </li>
       <li class="nav-item">
-        <a class="nav-link" routerLink="/dashboard/mydocuments">
-          <span data-feather="shopping-cart"></span>
+        <a class="nav-link" routerLink="/dashboard/myreviews" routerLinkActive="active">
+          <i class="bi bi-clipboard2-check"></i>
           Mis Revisiones
         </a>
       </li>
