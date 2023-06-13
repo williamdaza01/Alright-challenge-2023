@@ -16,7 +16,7 @@ const routes: Routes = [
     children: [
       { path: '', redirectTo: 'mydocuments', pathMatch: 'full' },
       { path: 'mydocuments', component: MyDocumentsComponent },
-      { path: 'myreviewes', component: MyReviewesComponent },
+      { path: 'myreviews', component: MyReviewesComponent },
     ],
   },
 ];

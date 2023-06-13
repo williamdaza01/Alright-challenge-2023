@@ -32,9 +32,9 @@
   </table>
 </div>
 
-<div class="table-responsive" *ngIf="isReviewer">
+<div class="table-responsive" *ngIf="isReviewer && pendingReviwes && pendingReviwes.length > 0">
   <h1>Revisiones pendientes</h1>
-  <table class="table">
+  <table class="table" >
     <thead>
       <tr>
         <th scope="col">
