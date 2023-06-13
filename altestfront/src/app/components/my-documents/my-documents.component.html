@@ -1,48 +1,204 @@
 <h1>Tus Documentos</h1>
-<table class="table">
-  <thead>
-    <tr>
-      <th scope="col"><span class="d-flex justify-content-center">Id</span></th>
-      <th scope="col">
-        <span class="d-flex justify-content-center">Documento</span>
-      </th>
-      <th scope="col">
-        <span class="d-flex justify-content-center">Titulo</span>
-      </th>
-      <th scope="col">
-        <span class="d-flex justify-content-center">Estado</span>
-      </th>
-      <th scope="col">
-        <span class="d-flex justify-content-center">Opciones</span>
-      </th>
-    </tr>
-  </thead>
-  <tbody>
-    <tr *ngFor="let document of docs">
-      <td>
-        <span class="d-flex justify-content-center">{{ document._id }}</span>
-      </td>
-      <td>
-        <a
-          class="d-flex justify-content-center"
-          (click)="openPDF(document.open.blob, content)"
-        >
-          <i class="bi bi-file-earmark-pdf"></i
-        ></a>
-      </td>
-      <td>
-        <span class="d-flex justify-content-center">{{ document.title }}</span>
-      </td>
-      <td>
-        <span class="d-flex justify-content-center">{{ document.state }}</span>
-      </td>
-      <td class="d-flex justify-content-around">
-        <a (click)="deleteDocument(document._id, deletedoc)"><i class="bi bi-trash-fill"></i></a
-        ><i class="bi bi-check-square"></i>
-      </td>
-    </tr>
-  </tbody>
-</table>
+<div class="table-responsive">
+  <table class="table">
+    <thead>
+      <tr>
+        <th scope="col">
+          <span class="d-flex justify-content-center">Id</span>
+        </th>
+        <th scope="col">
+          <span class="d-flex justify-content-center">Documento</span>
+        </th>
+        <th scope="col">
+          <span class="d-flex justify-content-center">Titulo</span>
+        </th>
+        <th scope="col">
+          <span class="d-flex justify-content-center">Estado</span>
+        </th>
+        <th scope="col">
+          <span class="d-flex justify-content-center">Opciones</span>
+        </th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr *ngFor="let document of docs">
+        <td>
+          <span class="d-flex justify-content-center">{{ document._id }}</span>
+        </td>
+        <td>
+          <a
+            class="d-flex justify-content-center"
+            (click)="openPDF(document.open.blob, content)"
+            (click)="documentIdForReview = document._id"
+          >
+            <i class="bi bi-file-earmark-pdf"></i
+          ></a>
+        </td>
+        <td>
+          <span class="d-flex justify-content-center">{{
+            document.title
+          }}</span>
+        </td>
+        <td>
+          <span class="d-flex justify-content-center">{{
+            document.state
+          }}</span>
+        </td>
+        <td class="d-flex justify-content-around">
+          <a (click)="deleteDocument(document._id, deletedoc)"
+            ><i class="bi bi-trash-fill"></i
+          ></a>
+          <a (click)="loadComments(comment)"><i class="bi bi-card-list"></i></a>
+          <a
+            (click)="loadReviewers(revdoc)"
+            (click)="documentIdForReview = document._id"
+            ><i class="bi bi-check-square"></i
+          ></a>
+        </td>
+      </tr>
+    </tbody>
+  </table>
+</div>
+
+<ng-template #comment let-modal>
+  <div class="modal-header">
+    <h4 class="modal-title">Comentarios</h4>
+    <button
+      type="button"
+      class="btn-close"
+      aria-label="Close"
+      (click)="modal.dismiss('Cross click')"
+    ></button>
+  </div>
+  <div class="modal-body">
+    <table class="table">
+      <thead>
+        <tr>
+          <th scope="col">
+            <span class="d-flex justify-content-center">Nombre</span>
+          </th>
+          <th scope="col">
+            <span class="d-flex justify-content-center">Comentario</span>
+          </th>
+          <th scope="col">
+            <span class="d-flex justify-content-center">Opciones</span>
+          </th>
+        </tr>
+      </thead>
+      <tbody>
+        <tr *ngFor="let com of comments">
+          <td>
+            <span class="d-flex justify-content-center">{{
+              com.nameOwner
+            }}</span>
+          </td>
+          <td>
+            <span class="d-flex justify-content-center">{{
+              com.description
+            }}</span>
+          </td>
+          <td>
+            <span class="d-flex justify-content-center">
+              <div class="form-check">
+                <a (click)="changeStateComment(com._id, acceptedState)"
+                  ><i class="bi bi-check"></i
+                ></a>
+                <a (click)="changeStateComment(com._id, rejectedState)"
+                  ><i class="bi bi-x"></i
+                ></a>
+                <a (click)="deleteComment(com._id, com.idOwner)"
+                  ><i class="bi bi-trash-fill"></i
+                ></a>
+              </div>
+            </span>
+          </td>
+        </tr>
+      </tbody>
+    </table>
+  </div>
+  <div class="modal-footer">
+    <button
+      type="button"
+      class="btn btn-light"
+      (click)="modal.close('Close click')"
+    >
+      Close
+    </button>
+  </div>
+</ng-template>
+
+<ng-template #revdoc let-modal>
+  <div class="modal-header">
+    <h4 class="modal-title">Solicita Revision</h4>
+    <button
+      type="button"
+      class="btn-close"
+      aria-label="Close"
+      (click)="modal.dismiss('Cross click')"
+    ></button>
+  </div>
+  <div class="modal-body">
+    <table class="table">
+      <thead>
+        <tr>
+          <th scope="col">
+            <span class="d-flex justify-content-center">Id del Revisor</span>
+          </th>
+          <th scope="col">
+            <span class="d-flex justify-content-center"
+              >Nombre del Revisor</span
+            >
+          </th>
+          <th scope="col">
+            <span class="d-flex justify-content-center">Selecionar</span>
+          </th>
+        </tr>
+      </thead>
+      <tbody>
+        <tr *ngFor="let rev of reviewers">
+          <td>
+            <span class="d-flex justify-content-center">{{ rev._id }}</span>
+          </td>
+          <td>
+            <span class="d-flex justify-content-center"
+              >{{ rev.name }} {{ rev.lastname }}</span
+            >
+          </td>
+          <td>
+            <span class="d-flex justify-content-center">
+              <div class="form-check">
+                <input
+                  class="form-check-input"
+                  type="radio"
+                  [value]="rev._id"
+                  id="defaultCheck1"
+                  [(ngModel)]="selectedReviewerId"
+                />
+              </div>
+            </span>
+          </td>
+        </tr>
+      </tbody>
+    </table>
+  </div>
+  <div class="modal-footer">
+    <button
+      type="button"
+      class="btn btn-light"
+      (click)="modal.close('Close click')"
+    >
+      Close
+    </button>
+    <button
+      type="submit"
+      class="btn btn-success"
+      (click)="modal.close('Close click')"
+      (click)="requestReview()"
+    >
+      Solicitar Revision
+    </button>
+  </div>
+</ng-template>
 
 <ng-template #deletedoc let-modal>
   <div class="modal-header">
@@ -56,9 +212,7 @@
   </div>
   <div class="modal-body">
     <p>
-      <strong
-        >¿Seguro quieres borrar este documenro?</strong
-      >
+      <strong>¿Seguro quieres borrar este documenro?</strong>
     </p>
   </div>
   <div class="modal-footer">
@@ -101,6 +255,48 @@
     </ngx-extended-pdf-viewer>
   </div>
   <div class="modal-footer">
+    <button
+      type="button"
+      class="btn btn-success"
+      (click)="openModal(comm, 'xl')"
+    >
+      Crear Comentario
+    </button>
+    <button
+      type="button"
+      class="btn btn-light"
+      (click)="modal.close('Close click')"
+    >
+      Close
+    </button>
+  </div>
+</ng-template>
+
+<ng-template #comm let-modal>
+  <div class="modal-header">
+    <h4 class="modal-title">Comentario</h4>
+    <button
+      type="button"
+      class="btn-close"
+      aria-label="Close"
+      (click)="modal.dismiss('Cross click')"
+    ></button>
+  </div>
+  <div class="modal-body">
+    <div class="form-group">
+      <label for="exampleFormControlTextarea1">Comentario</label>
+      <textarea
+        class="form-control"
+        id="exampleFormControlTextarea1"
+        rows="3"
+        [(ngModel)]="commentValue"
+      ></textarea>
+    </div>
+  </div>
+  <div class="modal-footer">
+    <button type="button" class="btn btn-success" (click)="createComment()">
+      Crear Comentario
+    </button>
     <button
       type="button"
       class="btn btn-light"
