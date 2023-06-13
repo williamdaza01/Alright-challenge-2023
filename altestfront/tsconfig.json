@@ -22,7 +22,10 @@
     "lib": [
       "ES2022",
       "dom"
-    ]
+    ],
+    "paths": {
+      "crypto-js": ["./node_modules/crypto-js"]
+    }
   },
   "angularCompilerOptions": {
     "enableI18nLegacyMessageIdFormat": false,

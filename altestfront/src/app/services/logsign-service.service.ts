@@ -1,5 +1,5 @@
 import { Injectable } from '@angular/core';
-import { HttpClient, HttpHeaders } from '@angular/common/http';
+import { HttpClient } from '@angular/common/http';
 import { SessionStorageService } from 'ngx-webstorage';
 import { Observable } from 'rxjs';
 import * as CryptoJS from 'crypto-js';
